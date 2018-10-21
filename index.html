@@ -23,31 +23,38 @@
         action="#"
         title="Форма авторизации"
 >
-    <label for="">
-        Логин:
-        <input type="text" name="login" data-v-name="login"/>
-    </label>
-    <label for="">
-        Пароль:
-        <input type="password" name="pass" data-v-name="password"/>
-    </label>
-    <label for="">
-        eMail:
-        <input type="text" name="eMail" data-v-name="eMail"/>
-    </label>
-    <label for="">
-        Телефон:
-        <input type="text" name="phone" data-v-name="phoneInnational"/>
-    </label>
-    <label for="">
-        Команда:
-        <select  name="team" data-v-name="number">
-            <option value="1">Вася</option>
-            <option value="2">Петя</option>
-            <option value="3">Галя</option>
-        </select >
-    </label>
-    <button class="buttonSubmit">Submit</button>
+    <fieldset>
+        <legend>Некая форма авторизации</legend>
+        <label for="">
+            Логин:
+            <input type="text" name="login" data-v-name="login"/>
+        </label>
+        <label for="">
+            Пароль:
+            <input type="password" name="pass" data-v-name="password"/>
+        </label>
+        <label for="">
+            eMail:
+            <input type="text" name="eMail" data-v-name="eMail"/>
+        </label>
+        <label for="">
+            Телефон:
+            <input type="text" name="phone" data-v-name="phoneInnational"/>
+        </label>
+        <label for="">
+            Команда:
+            <select  name="team" data-v-name="number">
+                <!--
+                    <option selected disabled hidden style='display: none' value=''></option>
+                -->
+                <option selected value="">Выберите команду</option>
+                <option value="1">Вася</option>
+                <option value="2">Петя</option>
+                <option value="3">Галя</option>
+            </select >
+        </label>
+        <button class="buttonSubmit">Submit</button>
+    </fieldset>
 </form>
 </body>
 <script>

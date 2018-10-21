@@ -53,36 +53,58 @@ class Sv {
     bindForm(formEl) {
         let inputs = formEl.querySelectorAll('input');
         [].forEach.call(inputs, function (inputEl) {
-            let vName = inputEl.dataset.vName;
-            if (!this.isRegistered(vName)) {
-                console.log('@DEBUG: Unregistered vName(Validator Name) - ' + vName);
-            } else {
-                this.bindInput(inputEl);
-            }
+            this.bindInput(inputEl);
+        }, this);
+        let selects = formEl.querySelectorAll('select');
+        [].forEach.call(selects, function (inputEl) {
+            this.bindInput(inputEl);
         }, this);
     }
+
     bindInput(inputEl) {
         let vName = inputEl.dataset.vName;
-        inputEl.addEventListener('keyup', function (event) {
-            let vResult = SV.validate(vName, inputEl.value),
-                errEl = inputEl.closest('label').querySelector('.sv-error');
-            if (vResult.isValid) {
-                inputEl.classList.remove('invalid');
-                inputEl.classList.add('valid');
-                if(errEl !== null){
-                    inputEl.closest('label').removeChild(errEl);
-                }
-            } else {
-                if (errEl === null){
-                    errEl = document.createElement('div');
-                    errEl.classList.add('sv-error');
-                    inputEl.closest('label').appendChild(errEl )
-                }
-                errEl.innerHTML = vResult.errMessage;
-                inputEl.classList.remove('valid');
-                inputEl.classList.add('invalid');
+        if (!this.isRegistered(vName)) {
+            console.log('@DEBUG: Unregistered vName(Validator Name) - ' + vName);
+            return;
+        }
+        inputEl.addEventListener('keyup', (function (event) {
+            this.validateEl(inputEl);
+        }).bind(this));
+        inputEl.addEventListener('blur', (function (event) {
+            this.validateEl(inputEl);
+        }).bind(this));
+        inputEl.addEventListener('change', (function (event) {
+            this.validateEl(inputEl);
+        }).bind(this));
+        // inputEl.addEventListener('focus', (function (event) {
+        //     this.validateEl(inputEl);
+        // }).bind(this));
+    }
+    validateEl (inputEl){
+        console.log('validate', inputEl)
+        let vName = inputEl.dataset.vName;
+        if (!this.isRegistered(vName)) {
+            console.log('@DEBUG: Unregistered vName(Validator Name) - ' + vName);
+            return;
+        }
+        let vResult = SV.validate(vName, inputEl.value),
+            errEl = inputEl.closest('label').querySelector('.sv-error');
+        if (vResult.isValid) {
+            inputEl.classList.remove('invalid');
+            inputEl.classList.add('valid');
+            if(errEl !== null){
+                inputEl.closest('label').removeChild(errEl);
             }
-        });
+        } else {
+            if (errEl === null){
+                errEl = document.createElement('div');
+                errEl.classList.add('sv-error');
+                inputEl.closest('label').appendChild(errEl )
+            }
+            errEl.innerHTML = vResult.errMessage;
+            inputEl.classList.remove('valid');
+            inputEl.classList.add('invalid');
+        }
     }
 };
 

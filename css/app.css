@@ -18,7 +18,7 @@ input[name="pass"]::after{
 	transform: translateX(-50%);
 	top: 40%;
 	transform: translateY(-50%);
-	border: 1px dashed yellow;
+	--border: 1px dashed yellow;
 	padding: 10px;
 }
 #regForm input,
