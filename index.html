@@ -41,9 +41,9 @@
             Телефон:
             <input type="text" name="phone" data-v-name="phoneInnational"/>
         </label>
-        <label for="">
+        <label for="">+
             Команда:
-            <select  name="team" data-v-name="number">
+            <select name="team" data-v-name="number">
                 <!--
                     <option selected disabled hidden style='display: none' value=''></option>
                 -->
@@ -51,7 +51,7 @@
                 <option value="1">Вася</option>
                 <option value="2">Петя</option>
                 <option value="3">Галя</option>
-            </select >
+            </select>
         </label>
         <button class="buttonSubmit">Submit</button>
     </fieldset>
@@ -59,6 +59,81 @@
 </body>
 <script>
     var formEl = document.getElementById('regForm');
+    // formEl.querySelector('input[name="phone"]').;
+    (function (phoneEl) {
+        var mask = '+___ __ ___ __ __';
+        phoneEl.value = mask;
+        phoneEl.addEventListener('keyup', function () {
+            console.log('keyup/', doGetCaretPosition(event.target), event.which, event.target.value);
+        });
+        // +375 25 XXX XX XX
+        phoneEl.addEventListener('keydown', function (event) {
+            console.log('keydown/', doGetCaretPosition(event.target), event.which, event.target.value);
+            let charCode = event.which,
+                charLett = String.fromCharCode(charCode),
+                charPos = doGetCaretPosition(event.target);
+            if ([
+                9, // tab
+                35, // end
+                36, // home
+                37, // left
+                39, // right
+                116 // F5
+            ].indexOf(charCode) > -1) {
+                return;
+            }
+            event.preventDefault();
+            if (mask.charAt(charPos) === '_') {
+                phoneEl.value = phoneEl.value.slice(0, charPos) + charLett + phoneEl.value.slice(charPos + 1);
+                if (mask.charAt(charPos + 1) === '_') {
+                    phoneEl.selectionStart = charPos + 1;
+                } else if (mask.length - 1 < charPos + 2) {
+                    phoneEl.selectionStart = charPos;
+                } else {
+                    phoneEl.selectionStart = charPos + 2;
+                }
+                phoneEl.selectionEnd = phoneEl.selectionStart;
+            }
+            // event.which += 3;
+            // event.which = 0;
+            // event.stopImmediatePropagation();
+            // event.stopPropagation();
+        })
+    }).call(this, formEl.querySelector('input[name="phone"]'));
+
     SV.bindForm(formEl);
+
+    /*
+    ** Returns the caret (cursor) position of the specified text field.
+    ** Return value range is 0-oField.value.length.
+    */
+    function doGetCaretPosition(oField) {
+
+        // Initialize
+        var iCaretPos = 0;
+
+        // IE Support
+        if (document.selection) {
+
+            // Set focus on the element
+            oField.focus();
+
+            // To get cursor position, get empty selection range
+            var oSel = document.selection.createRange();
+
+            // Move selection start to 0 position
+            oSel.moveStart('character', -oField.value.length);
+
+            // The caret position is selection length
+            iCaretPos = oSel.text.length;
+        }
+
+        // Firefox support
+        else if (oField.selectionStart || oField.selectionStart == '0')
+            iCaretPos = oField.selectionStart;
+
+        // Return results
+        return iCaretPos;
+    }
 </script>
 </html>
