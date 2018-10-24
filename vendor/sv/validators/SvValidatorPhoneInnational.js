@@ -1,4 +1,9 @@
 'use strict';
+
+/**
+ * Валидация телефонных номеров международного формата.
+ * Пример валидации черех функцию обратного вызоваю
+ */
 class SvValidatorPhoneInnational extends SvBaseValidator {
     constructor() {
         super();

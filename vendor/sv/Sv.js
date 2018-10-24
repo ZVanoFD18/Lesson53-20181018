@@ -2,16 +2,28 @@
 
 /**
  * SV - Super Validator
+ * Точка входа. Основной класс плагина-валидатора.
+ * Может использоваться отдельно, но в большинстве случаев достаточно глобального экземпляра SV(см.ниже)
+ *
  */
 class Sv {
     constructor(options) {
         this.validators = {};
     }
 
+    /**
+     * Возвращает true, если валидатор с указанным именем зарегестрирован.
+     * @param vName
+     * @returns {boolean}
+     */
     isRegistered(vName) {
         return vName in this.validators;
     }
 
+    /**
+     * Регистрирует указаный валидатор со стандартным именем.
+     * @param validator
+     */
     reg(validator) {
         if (!(validator instanceof SvBaseValidator)) {
             throw new Error('Invalid validator type');
@@ -19,6 +31,11 @@ class Sv {
         this.regByAlias(validator.vName, validator);
     }
 
+    /**
+     * Регистрирует валидатор с указанным псевдонимом.
+     * @param vName
+     * @param validator
+     */
     regByAlias(vName, validator) {
         if (!(validator instanceof SvBaseValidator)) {
             throw new Error('Invalid validator type');
@@ -26,10 +43,20 @@ class Sv {
         this.validators[vName] = validator;
     }
 
+    /**
+     * Разрегистрирует валидатор. Т.е. удаляет из списка доступных.
+     * @param vName
+     */
     unreg(vName) {
         delete this.validators[vName];
     }
 
+    /**
+     * Возвращает экземпляр зарегистрированного валидатора по его имени.
+     * @param vName
+     * @param silently
+     * @returns {*}
+     */
     getValidator(vName, silently) {
         silently = silently || false;
         let validator = this.validators[vName];
@@ -40,8 +67,8 @@ class Sv {
     }
 
     /**
-     *
-     * @param vName
+     * Выполняет валидацию значения ипользуя заданное имя валидатора.
+     * @param vName - Имя валидатора, который следует использовать.
      * @param value
      * @returns {SvBaseResult}
      */
@@ -50,6 +77,10 @@ class Sv {
         return result;
     }
 
+    /**
+     * Перебирает элементы формы и привязывает валидацию, если это необходимо.
+     * @param formEl
+     */
     bindForm(formEl) {
         let inputs = formEl.querySelectorAll('input');
         [].forEach.call(inputs, function (inputEl) {
@@ -61,6 +92,10 @@ class Sv {
         }, this);
     }
 
+    /**
+     * Связывает обработчики событий с указанным элементом.
+     * @param inputEl
+     */
     bindInput(inputEl) {
         let vName = inputEl.dataset.vName;
         if (!this.isRegistered(vName)) {
@@ -80,6 +115,11 @@ class Sv {
         //     this.validateEl(inputEl);
         // }).bind(this));
     }
+
+    /**
+     * Выполняет валидацию указанного элемента.
+     * @param inputEl
+     */
     validateEl (inputEl){
         console.log('validate', inputEl)
         let vName = inputEl.dataset.vName;
@@ -107,5 +147,9 @@ class Sv {
         }
     }
 };
-
+/**
+ * Синглтон. Глобальный экземпляр плагина-валидатора.
+ * По-умолчанию все валидаторы регистрируются в этом объекте.
+ * @type {Sv}
+ */
 const SV = new Sv();

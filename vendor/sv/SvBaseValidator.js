@@ -1,7 +1,15 @@
 'use strict';
+
+/**
+ * Базовый класс валидатора.
+ * Все конечные валидаторы должны наследоваться от него.
+ */
 class SvBaseValidator {
     constructor (){
         this.vMethod = undefined;
+        /**
+         * Перечень поддерживаемых методов валидации
+         **/
         this.V_METHODS = {
             REGEX : 'VM_REGEX',
             CALLBACK : 'VM_CALLBACK'
@@ -12,6 +20,12 @@ class SvBaseValidator {
         this.vResult = new SvBaseResult();
         this.vInvalidText = 'Invalid';
     }
+
+    /**
+     * Выполняет валидацию значения текущим валидатором.
+     * @param value
+     * @returns {SvBaseResult}
+     */
     validate (value){
         this.vResult.clean();
         switch (this.vMethod) {
@@ -26,6 +40,13 @@ class SvBaseValidator {
         }
         return this.vResult;
     }
+
+    /**
+     * Валидация значения по регулярному выражению.
+     * @param value
+     * @returns {SvBaseResult}
+     * @private
+     */
     _validateRegex (value){
         let isValid = this.vRegex.test(value);
         if (!isValid){
@@ -33,6 +54,13 @@ class SvBaseValidator {
         }
         return this.vResult;
     }
+
+    /**
+     * Валидация значения через функцию обратного вызова.
+     * @param value
+     * @returns {SvBaseResult}
+     * @private
+     */
     _validateCallback (value){
         let isValid = this.vCallback(value);
         if (!isValid){

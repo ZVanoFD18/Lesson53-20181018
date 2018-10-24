@@ -82,7 +82,10 @@
             ].indexOf(charCode) > -1) {
                 return;
             }
-            event.preventDefault();
+            event.preventDefault(); // Отменить действие по умолчанию
+            // event.stopImmediatePropagation(); // Отменить обработку ортавшихся обработчиков
+            // event.stopPropagation(); // Остановить всплытие
+
             if (mask.charAt(charPos) === '_') {
                 phoneEl.value = phoneEl.value.slice(0, charPos) + charLett + phoneEl.value.slice(charPos + 1);
                 if (mask.charAt(charPos + 1) === '_') {
@@ -94,10 +97,6 @@
                 }
                 phoneEl.selectionEnd = phoneEl.selectionStart;
             }
-            // event.which += 3;
-            // event.which = 0;
-            // event.stopImmediatePropagation();
-            // event.stopPropagation();
         })
     }).call(this, formEl.querySelector('input[name="phone"]'));
 
